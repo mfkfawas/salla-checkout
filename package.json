@@ -16,7 +16,11 @@
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5",
     "jest-cli": "^27.4.5",
-    "puppeteer": "^10.0.0"
+    "puppeteer": "^22.4.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@types/babel__traverse": "^7.20.5",
+    "typescript": "^5.4.2"
+  }
 }
