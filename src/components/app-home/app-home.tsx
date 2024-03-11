@@ -9,10 +9,9 @@ export class AppHome {
   render() {
     return (
       <div class="app-home">
-        <p>
-          Welcome to the Stencil App Starter. You can use this starter to build entire apps all with web components using Stencil! Check out our docs on{' '}
-          <a href="https://stenciljs.com">stenciljs.com</a> to get started.
-        </p>
+        <div class="bg-indigo-600 p-6 rounded-md flex justify-center">
+          <h1 class="text-white font-sans">This is a Stencil component using Tailwind</h1>
+        </div>
 
         <stencil-route-link url="/profile/stencil">
           <button>Profile page</button>
