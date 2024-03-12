@@ -1,5 +1,6 @@
 import { Component, Fragment, Host, State, h } from '@stencil/core';
-import { ApiServiceResponse, Item, mockApiService } from '../../services/mock-api-service';
+import { Item, mockApiService } from '../../services/mock-api-service';
+import promoIcon from '../../assets/items/promo-icon.svg';
 
 @Component({
   tag: 'app-cart',
@@ -8,6 +9,8 @@ import { ApiServiceResponse, Item, mockApiService } from '../../services/mock-ap
 })
 export class AppCart {
   @State() isLoading = true;
+  @State() isPromoTrue = false;
+  @State() value: string = '';
   @State() items: Item[] = [];
 
   async componentDidRender() {
@@ -16,13 +19,40 @@ export class AppCart {
     this.items = data;
   }
 
+  handlePromoApply = () => {
+    this.isLoading = true;
+    return new Promise(resolve => {
+      setTimeout(() => {
+        if (this.value.trim().toLowerCase() === 'freemusic') this.isPromoTrue = true;
+        else this.isPromoTrue = false;
+
+        this.value = '';
+        this.isLoading = false;
+        resolve('success');
+      }, 1000);
+    });
+  };
+
+  handlePromoDelete = () => {
+    this.isLoading = true;
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.isPromoTrue = false;
+        resolve('success');
+      }, 1000);
+    });
+  };
+
   render() {
-    const { isLoading, items } = this;
-    const totalPrice = items.reduce((acc, curr) => acc + curr.price * curr.count, 0);
-    const formattedPrice = new Intl.NumberFormat(navigator.language, {
+    const formatter = new Intl.NumberFormat(navigator.language, {
       style: 'currency',
       currency: 'SAR',
-    }).format(totalPrice);
+    });
+    const promoValue = 58.5;
+    const { isLoading, items, isPromoTrue } = this;
+    const formattedPromoValue = formatter.format(promoValue);
+    const totalPrice = items.reduce((acc, curr) => acc + curr.price * curr.count, 0);
+    const formattedPrice = formatter.format(!isPromoTrue ? totalPrice : totalPrice - promoValue);
 
     return (
       <Host>
@@ -50,11 +80,31 @@ export class AppCart {
 
               {/* coupon section */}
               <div class="flex justify-between items-center gap-4">
-                <span class="font-bold text-xs">Have a coupon?</span>
-                <div class="bg-gray-50 border rounded-md flex items-center gap-2 p-1">
-                  <input class="border-none ring-transparent h-4 w-20 bg-transparent placeholder-gray-400 promo-input text-xs font-normal" placeholder="insert code" />
-                  <button class="bg-basic text-white text-xs px-2 py-1 rounded-md">Apply</button>
-                </div>
+                {!isPromoTrue && (
+                  <Fragment>
+                    <span class="font-bold text-xs">Have a coupon?</span>
+                    <div class="bg-gray-50 border rounded-md flex items-center gap-2 p-1">
+                      <input
+                        value={this.value}
+                        onInput={e => {
+                          const target = e.target as HTMLInputElement;
+                          this.value = target.value;
+                        }}
+                        class="border-none ring-transparent h-4 w-20 bg-transparent placeholder-gray-400 promo-input text-xs font-normal"
+                        placeholder="insert code"
+                      />
+                      <button onClick={this.handlePromoApply} class="bg-basic text-white text-xs px-2 py-1 rounded-md">
+                        Apply
+                      </button>
+                    </div>
+                  </Fragment>
+                )}
+                {isPromoTrue && (
+                  <Fragment>
+                    <img src={promoIcon} alt="prmo-delete" class="logo" onClick={this.handlePromoDelete} />
+                    <span class="font-bold text-xs text-red-500">- {formattedPromoValue}</span>
+                  </Fragment>
+                )}
               </div>
 
               {/* price section */}
