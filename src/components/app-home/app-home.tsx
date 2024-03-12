@@ -8,15 +8,17 @@ import { Component, h } from '@stencil/core';
 export class AppHome {
   render() {
     return (
-      <div class="app-home">
+      <app-layout>
+        <app-header />
+
         <div class="bg-indigo-600 p-6 rounded-md flex justify-center">
-          <h1 class="text-white font-sans">This is a Stencil component using Tailwind</h1>
+          <p class="text-white">This is a Stencil component using Tailwind</p>
         </div>
 
-        <stencil-route-link url="/profile/stencil">
+        {/* <stencil-route-link url="/profile/stencil">
           <button>Profile page</button>
-        </stencil-route-link>
-      </div>
+        </stencil-route-link> */}
+      </app-layout>
     );
   }
 }

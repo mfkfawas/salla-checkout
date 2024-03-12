@@ -7,20 +7,38 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults } from "@stencil-community/router";
 export namespace Components {
+    interface AppHeader {
+    }
     interface AppHome {
+    }
+    interface AppLayout {
     }
     interface AppProfile {
         "match": MatchResults;
     }
     interface AppRoot {
     }
+    interface AppShimmer {
+    }
 }
 declare global {
+    interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
+    }
+    var HTMLAppHeaderElement: {
+        prototype: HTMLAppHeaderElement;
+        new (): HTMLAppHeaderElement;
+    };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
     var HTMLAppHomeElement: {
         prototype: HTMLAppHomeElement;
         new (): HTMLAppHomeElement;
+    };
+    interface HTMLAppLayoutElement extends Components.AppLayout, HTMLStencilElement {
+    }
+    var HTMLAppLayoutElement: {
+        prototype: HTMLAppLayoutElement;
+        new (): HTMLAppLayoutElement;
     };
     interface HTMLAppProfileElement extends Components.AppProfile, HTMLStencilElement {
     }
@@ -34,33 +52,54 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLAppShimmerElement extends Components.AppShimmer, HTMLStencilElement {
+    }
+    var HTMLAppShimmerElement: {
+        prototype: HTMLAppShimmerElement;
+        new (): HTMLAppShimmerElement;
+    };
     interface HTMLElementTagNameMap {
+        "app-header": HTMLAppHeaderElement;
         "app-home": HTMLAppHomeElement;
+        "app-layout": HTMLAppLayoutElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "app-shimmer": HTMLAppShimmerElement;
     }
 }
 declare namespace LocalJSX {
+    interface AppHeader {
+    }
     interface AppHome {
+    }
+    interface AppLayout {
     }
     interface AppProfile {
         "match"?: MatchResults;
     }
     interface AppRoot {
     }
+    interface AppShimmer {
+    }
     interface IntrinsicElements {
+        "app-header": AppHeader;
         "app-home": AppHome;
+        "app-layout": AppLayout;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "app-shimmer": AppShimmer;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
+            "app-layout": LocalJSX.AppLayout & JSXBase.HTMLAttributes<HTMLAppLayoutElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "app-shimmer": LocalJSX.AppShimmer & JSXBase.HTMLAttributes<HTMLAppShimmerElement>;
         }
     }
 }
