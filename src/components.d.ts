@@ -7,6 +7,14 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults } from "@stencil-community/router";
 export namespace Components {
+    interface AppCart {
+    }
+    interface AppCartItem {
+        "count": CartItemProps['count'];
+        "name": CartItemProps['name'];
+        "pic": CartItemProps['pic'];
+        "price": CartItemProps['price'];
+    }
     interface AppHeader {
     }
     interface AppHome {
@@ -22,6 +30,18 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAppCartElement extends Components.AppCart, HTMLStencilElement {
+    }
+    var HTMLAppCartElement: {
+        prototype: HTMLAppCartElement;
+        new (): HTMLAppCartElement;
+    };
+    interface HTMLAppCartItemElement extends Components.AppCartItem, HTMLStencilElement {
+    }
+    var HTMLAppCartItemElement: {
+        prototype: HTMLAppCartItemElement;
+        new (): HTMLAppCartItemElement;
+    };
     interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
     }
     var HTMLAppHeaderElement: {
@@ -59,6 +79,8 @@ declare global {
         new (): HTMLAppShimmerElement;
     };
     interface HTMLElementTagNameMap {
+        "app-cart": HTMLAppCartElement;
+        "app-cart-item": HTMLAppCartItemElement;
         "app-header": HTMLAppHeaderElement;
         "app-home": HTMLAppHomeElement;
         "app-layout": HTMLAppLayoutElement;
@@ -68,6 +90,14 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AppCart {
+    }
+    interface AppCartItem {
+        "count"?: CartItemProps['count'];
+        "name"?: CartItemProps['name'];
+        "pic"?: CartItemProps['pic'];
+        "price"?: CartItemProps['price'];
+    }
     interface AppHeader {
     }
     interface AppHome {
@@ -82,6 +112,8 @@ declare namespace LocalJSX {
     interface AppShimmer {
     }
     interface IntrinsicElements {
+        "app-cart": AppCart;
+        "app-cart-item": AppCartItem;
         "app-header": AppHeader;
         "app-home": AppHome;
         "app-layout": AppLayout;
@@ -94,6 +126,8 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "app-cart": LocalJSX.AppCart & JSXBase.HTMLAttributes<HTMLAppCartElement>;
+            "app-cart-item": LocalJSX.AppCartItem & JSXBase.HTMLAttributes<HTMLAppCartItemElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-layout": LocalJSX.AppLayout & JSXBase.HTMLAttributes<HTMLAppLayoutElement>;
