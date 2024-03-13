@@ -1,16 +1,14 @@
-# Stencil App Starter
+## Production ready link
 
-Stencil is a compiler for building fast web apps using Web Components.
+https://salla-checkout.netlify.app/
 
-Stencil combines the best concepts of the most popular frontend frameworks into a compile-time rather than run-time tool.  Stencil takes TypeScript, JSX, a tiny virtual DOM layer, efficient one-way data binding, an asynchronous rendering pipeline (similar to React Fiber), and lazy-loading out of the box, and generates 100% standards-based Web Components that run in any browser supporting the Custom Elements v1 spec.
+## Notes
 
-Stencil components are just Web Components, so they work in any major framework or with no framework at all. In many cases, Stencil can be used as a drop in replacement for traditional frontend frameworks given the capabilities now available in the browser, though using it as such is certainly not required.
-
-Stencil also enables a number of key capabilities on top of Web Components, in particular Server Side Rendering (SSR) without the need to run a headless browser, pre-rendering, and objects-as-properties (instead of just strings).
-
-## Getting Started
-
-To start a new project using Stencil, clone this repo to a new directory:
+UI and functionality implemented as per the requirements.
+Used stacks are: tailwindcss, stenciljs and typescript.
+Unit test for only static(which have no asset imports) are successfully done.
+Other unit tests are failing due to incompatible issue with jest and svg/asset import mocking.
+#Tried to build React and Vue wrapper components directory, but the build was failing.
 
 ```bash
 npm init stencil app
@@ -26,16 +24,4 @@ To build the app for production, run:
 
 ```bash
 npm run build
-```
-
-To run the unit tests once, run:
-
-```
-npm test
-```
-
-To run the unit tests and watch for file changes during development, run:
-
-```
-npm run test.watch
 ```
