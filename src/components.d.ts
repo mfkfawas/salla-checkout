@@ -5,15 +5,18 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MatchResults } from "@stencil-community/router";
+import { MatchResults, RouterHistory } from "@stencil-community/router";
 export namespace Components {
     interface AppCart {
+        "history": RouterHistory;
     }
     interface AppCartItem {
         "count": CartItemProps['count'];
         "name": CartItemProps['name'];
         "pic": CartItemProps['pic'];
         "price": CartItemProps['price'];
+    }
+    interface AppConfirmed {
     }
     interface AppHeader {
     }
@@ -28,6 +31,16 @@ export namespace Components {
     }
     interface AppShimmer {
     }
+    interface AppShipping {
+        "history": RouterHistory;
+    }
+    interface AppShippingItem {
+        "name": ShippingItemProps['name'];
+        "onChangeShippingMethod": ShippingItemProps['onChangeShippingMethod'];
+        "pic": ShippingItemProps['pic'];
+        "price": ShippingItemProps['price'];
+        "selectedShippingMethod": ShippingItemProps['selectedShippingMethod'];
+    }
 }
 declare global {
     interface HTMLAppCartElement extends Components.AppCart, HTMLStencilElement {
@@ -41,6 +54,12 @@ declare global {
     var HTMLAppCartItemElement: {
         prototype: HTMLAppCartItemElement;
         new (): HTMLAppCartItemElement;
+    };
+    interface HTMLAppConfirmedElement extends Components.AppConfirmed, HTMLStencilElement {
+    }
+    var HTMLAppConfirmedElement: {
+        prototype: HTMLAppConfirmedElement;
+        new (): HTMLAppConfirmedElement;
     };
     interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
     }
@@ -78,25 +97,43 @@ declare global {
         prototype: HTMLAppShimmerElement;
         new (): HTMLAppShimmerElement;
     };
+    interface HTMLAppShippingElement extends Components.AppShipping, HTMLStencilElement {
+    }
+    var HTMLAppShippingElement: {
+        prototype: HTMLAppShippingElement;
+        new (): HTMLAppShippingElement;
+    };
+    interface HTMLAppShippingItemElement extends Components.AppShippingItem, HTMLStencilElement {
+    }
+    var HTMLAppShippingItemElement: {
+        prototype: HTMLAppShippingItemElement;
+        new (): HTMLAppShippingItemElement;
+    };
     interface HTMLElementTagNameMap {
         "app-cart": HTMLAppCartElement;
         "app-cart-item": HTMLAppCartItemElement;
+        "app-confirmed": HTMLAppConfirmedElement;
         "app-header": HTMLAppHeaderElement;
         "app-home": HTMLAppHomeElement;
         "app-layout": HTMLAppLayoutElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "app-shimmer": HTMLAppShimmerElement;
+        "app-shipping": HTMLAppShippingElement;
+        "app-shipping-item": HTMLAppShippingItemElement;
     }
 }
 declare namespace LocalJSX {
     interface AppCart {
+        "history"?: RouterHistory;
     }
     interface AppCartItem {
         "count"?: CartItemProps['count'];
         "name"?: CartItemProps['name'];
         "pic"?: CartItemProps['pic'];
         "price"?: CartItemProps['price'];
+    }
+    interface AppConfirmed {
     }
     interface AppHeader {
     }
@@ -111,15 +148,28 @@ declare namespace LocalJSX {
     }
     interface AppShimmer {
     }
+    interface AppShipping {
+        "history"?: RouterHistory;
+    }
+    interface AppShippingItem {
+        "name"?: ShippingItemProps['name'];
+        "onChangeShippingMethod"?: ShippingItemProps['onChangeShippingMethod'];
+        "pic"?: ShippingItemProps['pic'];
+        "price"?: ShippingItemProps['price'];
+        "selectedShippingMethod"?: ShippingItemProps['selectedShippingMethod'];
+    }
     interface IntrinsicElements {
         "app-cart": AppCart;
         "app-cart-item": AppCartItem;
+        "app-confirmed": AppConfirmed;
         "app-header": AppHeader;
         "app-home": AppHome;
         "app-layout": AppLayout;
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "app-shimmer": AppShimmer;
+        "app-shipping": AppShipping;
+        "app-shipping-item": AppShippingItem;
     }
 }
 export { LocalJSX as JSX };
@@ -128,12 +178,15 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "app-cart": LocalJSX.AppCart & JSXBase.HTMLAttributes<HTMLAppCartElement>;
             "app-cart-item": LocalJSX.AppCartItem & JSXBase.HTMLAttributes<HTMLAppCartItemElement>;
+            "app-confirmed": LocalJSX.AppConfirmed & JSXBase.HTMLAttributes<HTMLAppConfirmedElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-layout": LocalJSX.AppLayout & JSXBase.HTMLAttributes<HTMLAppLayoutElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-shimmer": LocalJSX.AppShimmer & JSXBase.HTMLAttributes<HTMLAppShimmerElement>;
+            "app-shipping": LocalJSX.AppShipping & JSXBase.HTMLAttributes<HTMLAppShippingElement>;
+            "app-shipping-item": LocalJSX.AppShippingItem & JSXBase.HTMLAttributes<HTMLAppShippingItemElement>;
         }
     }
 }

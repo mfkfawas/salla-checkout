@@ -13,7 +13,7 @@ export interface Item {
   count: number;
 }
 
-interface Shipping {
+export interface Shipping {
   id: number;
   name: string;
   price: string;

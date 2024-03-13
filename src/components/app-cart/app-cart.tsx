@@ -1,6 +1,7 @@
-import { Component, Fragment, Host, State, h } from '@stencil/core';
+import { Component, Fragment, Host, Prop, State, h } from '@stencil/core';
 import { Item, mockApiService } from '../../services/mock-api-service';
 import promoIcon from '../../assets/items/promo-icon.svg';
+import { RouterHistory } from '@stencil-community/router';
 
 @Component({
   tag: 'app-cart',
@@ -12,6 +13,8 @@ export class AppCart {
   @State() isPromoTrue = false;
   @State() value: string = '';
   @State() items: Item[] = [];
+
+  @Prop() history: RouterHistory;
 
   async componentDidRender() {
     const data = (await mockApiService('/items')) as Item[];
@@ -52,7 +55,12 @@ export class AppCart {
     const { isLoading, items, isPromoTrue } = this;
     const formattedPromoValue = formatter.format(promoValue);
     const totalPrice = items.reduce((acc, curr) => acc + curr.price * curr.count, 0);
-    const formattedPrice = formatter.format(!isPromoTrue ? totalPrice : totalPrice - promoValue);
+    const totalPriceWithPromo = !isPromoTrue ? totalPrice : totalPrice - promoValue;
+    const formattedPrice = formatter.format(totalPriceWithPromo);
+
+    const navigateWithState = () => {
+      this.history.push('/shipping', { totalCartValue: totalPriceWithPromo });
+    };
 
     return (
       <Host>
@@ -114,7 +122,9 @@ export class AppCart {
               </div>
 
               {/* Proceed Button */}
-              <button class="bg-basic text-white text-sm font-normal p-3 rounded-md">Proceed to shipping</button>
+              <button onClick={() => navigateWithState()} class="bg-basic text-white text-sm font-normal p-3 rounded-md">
+                Proceed to shipping
+              </button>
             </div>
           </app-layout>
         )}

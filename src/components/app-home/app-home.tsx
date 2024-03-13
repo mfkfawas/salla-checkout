@@ -15,9 +15,9 @@ export class AppHome {
           <p class="text-white">This is a Stencil component using Tailwind</p>
         </div>
 
-        {/* <stencil-route-link url="/profile/stencil">
+        <stencil-route-link url="/profile/stencil">
           <button>Profile page</button>
-        </stencil-route-link> */}
+        </stencil-route-link>
       </app-layout>
     );
   }
