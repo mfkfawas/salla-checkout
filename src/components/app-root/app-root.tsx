@@ -12,7 +12,6 @@ export class AppRoot {
         <stencil-router>
           <stencil-route-switch scrollTopOffset={0}>
             <stencil-route url="/" component="app-cart" exact={true} />
-            <stencil-route url="/profile/:name" component="app-profile" />
             <stencil-route url="/shipping" component="app-shipping" exact={true} />
             <stencil-route url="/confirmed" component="app-confirmed" exact={true} />
           </stencil-route-switch>

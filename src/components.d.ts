@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { RouterHistory } from "@stencil-community/router";
 export namespace Components {
     interface AppCart {
         "history": RouterHistory;
@@ -17,15 +17,11 @@ export namespace Components {
         "price": CartItemProps['price'];
     }
     interface AppConfirmed {
+        "history": RouterHistory;
     }
     interface AppHeader {
     }
-    interface AppHome {
-    }
     interface AppLayout {
-    }
-    interface AppProfile {
-        "match": MatchResults;
     }
     interface AppRoot {
     }
@@ -67,23 +63,11 @@ declare global {
         prototype: HTMLAppHeaderElement;
         new (): HTMLAppHeaderElement;
     };
-    interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
-    }
-    var HTMLAppHomeElement: {
-        prototype: HTMLAppHomeElement;
-        new (): HTMLAppHomeElement;
-    };
     interface HTMLAppLayoutElement extends Components.AppLayout, HTMLStencilElement {
     }
     var HTMLAppLayoutElement: {
         prototype: HTMLAppLayoutElement;
         new (): HTMLAppLayoutElement;
-    };
-    interface HTMLAppProfileElement extends Components.AppProfile, HTMLStencilElement {
-    }
-    var HTMLAppProfileElement: {
-        prototype: HTMLAppProfileElement;
-        new (): HTMLAppProfileElement;
     };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
@@ -114,9 +98,7 @@ declare global {
         "app-cart-item": HTMLAppCartItemElement;
         "app-confirmed": HTMLAppConfirmedElement;
         "app-header": HTMLAppHeaderElement;
-        "app-home": HTMLAppHomeElement;
         "app-layout": HTMLAppLayoutElement;
-        "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "app-shimmer": HTMLAppShimmerElement;
         "app-shipping": HTMLAppShippingElement;
@@ -134,15 +116,11 @@ declare namespace LocalJSX {
         "price"?: CartItemProps['price'];
     }
     interface AppConfirmed {
+        "history"?: RouterHistory;
     }
     interface AppHeader {
     }
-    interface AppHome {
-    }
     interface AppLayout {
-    }
-    interface AppProfile {
-        "match"?: MatchResults;
     }
     interface AppRoot {
     }
@@ -163,9 +141,7 @@ declare namespace LocalJSX {
         "app-cart-item": AppCartItem;
         "app-confirmed": AppConfirmed;
         "app-header": AppHeader;
-        "app-home": AppHome;
         "app-layout": AppLayout;
-        "app-profile": AppProfile;
         "app-root": AppRoot;
         "app-shimmer": AppShimmer;
         "app-shipping": AppShipping;
@@ -180,9 +156,7 @@ declare module "@stencil/core" {
             "app-cart-item": LocalJSX.AppCartItem & JSXBase.HTMLAttributes<HTMLAppCartItemElement>;
             "app-confirmed": LocalJSX.AppConfirmed & JSXBase.HTMLAttributes<HTMLAppConfirmedElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
-            "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-layout": LocalJSX.AppLayout & JSXBase.HTMLAttributes<HTMLAppLayoutElement>;
-            "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-shimmer": LocalJSX.AppShimmer & JSXBase.HTMLAttributes<HTMLAppShimmerElement>;
             "app-shipping": LocalJSX.AppShipping & JSXBase.HTMLAttributes<HTMLAppShippingElement>;
