@@ -19,32 +19,41 @@ export class AppCart {
   discountPercent = 0;
 
   async componentDidRender() {
-    if (this.items.length === 0) {
-      const response = await getItems();
-      const data = response.data.data.map(item => ({
-        id: Number(item.id),
-        name: item.label,
-        price: item.price.amount,
-        pic: item.thumbnail,
-        count: item.qty,
-      }));
-      this.items = data;
+    try {
+      if (this.items.length === 0) {
+        const response = await getItems();
+        const data =
+          response.data?.data?.map(item => ({
+            id: Number(item.id),
+            name: item.label,
+            price: item.price.amount,
+            pic: item.thumbnail,
+            count: item.qty,
+          })) || [];
+        this.items = data;
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
       this.isLoading = false;
     }
   }
 
   handlePromoApply = async () => {
-    this.isLoading = true;
-    const response = await getCoupons();
-    const { data } = response.data;
-    const promoCodeFromAPI = data.at(0).name;
-    this.discountPercent = Number(data.at(0).discount.amount);
-
-    if (this.value.trim().toLowerCase() === promoCodeFromAPI.toLowerCase()) this.isPromoTrue = true;
-    else this.isPromoTrue = false;
-
-    this.value = '';
-    this.isLoading = false;
+    try {
+      this.isLoading = true;
+      const response = await getCoupons();
+      const { data } = response.data;
+      const promoCodeFromAPI = data.at(0).name;
+      this.discountPercent = Number(data.at(0).discount.amount);
+      if (this.value.trim().toLowerCase() === promoCodeFromAPI.toLowerCase()) this.isPromoTrue = true;
+      else this.isPromoTrue = false;
+      this.value = '';
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+    }
   };
 
   handlePromoDelete = async () => {

@@ -20,37 +20,49 @@ export class AppShipping {
   isPromoTrue = false;
 
   async componentWillLoad() {
-    const response = await getTotals({ isPromoTrue: this.history.location.state.isPromoTrue, shipping: this.selectedShippingMethod });
-    const data = response.data.data;
-    this.totalCartPrice = data.find(total => total.name === 'cart_total')?.amount - data.find(total => total.name === 'discount')?.amount;
-    this.shippingFees = data.find(total => total.name === 'shipping_fees')?.amount;
-    this.isLoading = false;
+    try {
+      const response = await getTotals({ isPromoTrue: this.history.location.state.isPromoTrue, shipping: this.selectedShippingMethod });
+      const data = response.data.data;
+      this.totalCartPrice = data.find(total => total.name === 'cart_total')?.amount - data.find(total => total.name === 'discount')?.amount;
+      this.shippingFees = data.find(total => total.name === 'shipping_fees')?.amount;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async componentDidRender() {
-    if (this.shippingItems.length === 0) {
-      const response = await getShipping();
-      const data = response.data.data.map(item => ({
-        id: Number(item.id),
-        name: item.label,
-        price: item.fees.amount,
-        pic: item.logo,
-      }));
-      this.shippingItems = data;
-
+    try {
+      if (this.shippingItems.length === 0) {
+        const response = await getShipping();
+        const data = response.data.data.map(item => ({
+          id: Number(item.id),
+          name: item.label,
+          price: item.fees.amount,
+          pic: item.logo,
+        }));
+        this.shippingItems = data;
+        this.isPromoTrue = this.history.location.state.isPromoTrue;
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
       this.isLoading = false;
-      this.isPromoTrue = this.history.location.state.isPromoTrue;
     }
   }
 
   changeShippingMethod = async (method: ShippingMethods) => {
-    this.isLoading = true;
-    const response = await getTotals({ isPromoTrue: this.isPromoTrue, shipping: method });
-    const data = response.data.data;
-    this.totalCartPrice = data.find(total => total.name === 'cart_total')?.amount - data.find(total => total.name === 'discount')?.amount;
-    this.shippingFees = data.find(total => total.name === 'shipping_fees')?.amount;
-    this.isLoading = false;
-    this.selectedShippingMethod = method;
+    try {
+      this.isLoading = true;
+      const response = await getTotals({ isPromoTrue: this.isPromoTrue, shipping: method });
+      const data = response.data.data;
+      this.totalCartPrice = data.find(total => total.name === 'cart_total')?.amount - data.find(total => total.name === 'discount')?.amount;
+      this.shippingFees = data.find(total => total.name === 'shipping_fees')?.amount;
+      this.selectedShippingMethod = method;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+    }
   };
 
   render() {
