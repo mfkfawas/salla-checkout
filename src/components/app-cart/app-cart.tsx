@@ -1,5 +1,5 @@
 import { Component, Fragment, Host, Prop, State, h } from '@stencil/core';
-import { Item, mockApiService } from '../../services/mock-api-service';
+import { Item, getItems, getCoupons } from '../../services/mock-api-service';
 import promoIcon from '../../assets/items/promo-icon.svg';
 import { RouterHistory } from '@stencil-community/router';
 
@@ -16,50 +16,56 @@ export class AppCart {
 
   @Prop() history: RouterHistory;
 
+  discountPercent = 0;
+
   async componentDidRender() {
-    const data = (await mockApiService('/items')) as Item[];
-    this.isLoading = false;
-    this.items = data;
+    if (this.items.length === 0) {
+      const response = await getItems();
+      const data = response.data.data.map(item => ({
+        id: Number(item.id),
+        name: item.label,
+        price: item.price.amount,
+        pic: item.thumbnail,
+        count: item.qty,
+      }));
+      this.items = data;
+      this.isLoading = false;
+    }
   }
 
-  handlePromoApply = () => {
+  handlePromoApply = async () => {
     this.isLoading = true;
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (this.value.trim().toLowerCase() === 'freemusic') this.isPromoTrue = true;
-        else this.isPromoTrue = false;
+    const response = await getCoupons();
+    const { data } = response.data;
+    const promoCodeFromAPI = data.at(0).name;
+    this.discountPercent = Number(data.at(0).discount.amount);
 
-        this.value = '';
-        this.isLoading = false;
-        resolve('success');
-      }, 1000);
-    });
+    if (this.value.trim().toLowerCase() === promoCodeFromAPI.toLowerCase()) this.isPromoTrue = true;
+    else this.isPromoTrue = false;
+
+    this.value = '';
+    this.isLoading = false;
   };
 
-  handlePromoDelete = () => {
-    this.isLoading = true;
-    return new Promise(resolve => {
-      setTimeout(() => {
-        this.isPromoTrue = false;
-        resolve('success');
-      }, 1000);
-    });
+  handlePromoDelete = async () => {
+    this.isPromoTrue = false;
   };
 
   render() {
+    const { isLoading, items, isPromoTrue, discountPercent } = this;
+
     const formatter = new Intl.NumberFormat(navigator.language, {
       style: 'currency',
       currency: 'SAR',
     });
-    const promoValue = 58.5;
-    const { isLoading, items, isPromoTrue } = this;
-    const formattedPromoValue = formatter.format(promoValue);
     const totalPrice = items.reduce((acc, curr) => acc + curr.price * curr.count, 0);
+    const promoValue = totalPrice * (discountPercent / 100);
     const totalPriceWithPromo = !isPromoTrue ? totalPrice : totalPrice - promoValue;
+    const formattedPromoValue = formatter.format(promoValue);
     const formattedPrice = formatter.format(totalPriceWithPromo);
 
     const navigateWithState = () => {
-      this.history.push('/shipping', { totalCartValue: totalPriceWithPromo });
+      this.history.push('/shipping', { isPromoTrue });
     };
 
     return (

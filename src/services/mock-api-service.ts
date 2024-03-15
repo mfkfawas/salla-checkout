@@ -1,9 +1,12 @@
-import bosePic from '../assets/items/bose-headphones.svg';
-import baseusPic from '../assets/items/basues-headphones.svg';
-import applePic from '../assets/items/apple-headphones.svg';
-import dhlLogo from '../assets/items/dhl-logo.svg';
-import fedexLogo from '../assets/items/fedex-logo.svg';
-import aramexLogo from '../assets/items/aramex-logo.svg';
+import axios from 'axios';
+
+export const publicAxiosInstance = axios.create({
+  baseURL: 'https://checkout.free.beeceptor.com',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+});
 
 export interface Item {
   id: number;
@@ -16,62 +19,92 @@ export interface Item {
 export interface Shipping {
   id: number;
   name: string;
-  price: string;
+  price: number;
   pic: string;
 }
 
-interface CouponResponse {
-  status: 'success' | 'failure';
-  statusMessage: string;
-}
+export type ApiServiceResponse = Item[] | Shipping[];
 
-export type ApiServiceResponse = Item[] | Shipping[] | CouponResponse;
+// ------------getItems API START---------------------------------------------------------
+type GetItemsResponseInterface = {
+  status: number;
+  success: boolean;
+  data: {
+    id: string;
+    label: string;
+    thumbnail: string;
+    qty: number;
+    price: {
+      currency: string;
+      amount: number;
+    };
+  }[];
+};
 
-const items = [
-  { id: 1, name: 'Bose QuietComfort 45 wireless bluetooth headphones', price: 1500, pic: bosePic, count: 1 },
-  { id: 2, name: 'Baseus Active Noise Cancelling Headphones', price: 750, pic: baseusPic, count: 1 },
-  { id: 3, name: 'Apple AirPods Max - Sky Blue', price: 1650, pic: applePic, count: 1 },
-];
+type GetItemsType = () => Promise<{ data: GetItemsResponseInterface }>;
 
-const shipping = [
-  { id: 1, name: 'DHL', price: 'Free', pic: dhlLogo },
-  { id: 2, name: 'FedEx', price: '15', pic: fedexLogo },
-  { id: 3, name: 'ARAMEX', price: '25', pic: aramexLogo },
-];
+export const getItems: GetItemsType = () => publicAxiosInstance.get('/items');
+// ------------getItems API END---------------------------------------------------------
 
-export async function mockApiService(endpoint: string, coupon?: string): Promise<ApiServiceResponse> {
-  if (endpoint === '/items')
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(items);
-      }, 1000);
-    });
+// ------------getCoupons API START---------------------------------------------------------
+type GetCouponsResponseInterface = {
+  status: number;
+  success: boolean;
+  data: {
+    id: string;
+    name: string;
+    label: string;
+    discount: {
+      type: string;
+      amount: string;
+    };
+  }[];
+};
 
-  if (endpoint === '/shipping')
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(shipping);
-      }, 1000);
-    });
+type GetCouponsType = () => Promise<{ data: GetCouponsResponseInterface }>;
 
-  if (endpoint === '/submit')
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ status: 'success', statusMessage: 'Order submitted successfully' });
-      }, 1000);
-    });
+export const getCoupons: GetCouponsType = () => publicAxiosInstance.get('/coupons');
+// ------------getCoupons API END---------------------------------------------------------
 
-  if (endpoint === '/coupon' && coupon.toLocaleLowerCase() === 'freemusic')
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ status: 'success', statusMessage: 'Coupon exists!' });
-      }, 1000);
-    });
+// ------------getShipping API START---------------------------------------------------------
+type GetShippingResponseInterface = {
+  status: number;
+  success: boolean;
+  data: {
+    id: string;
+    name: string;
+    label: string;
+    logo: string;
+    fees: {
+      currency: string;
+      amount: number;
+    };
+  }[];
+};
 
-  if (endpoint === '/coupon' && coupon.toLocaleLowerCase() !== 'freemusic')
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ status: 'failure', statusMessage: 'Coupon not exists!' });
-      }, 1000);
-    });
-}
+type GetShippingType = () => Promise<{ data: GetShippingResponseInterface }>;
+
+export const getShipping: GetShippingType = () => publicAxiosInstance.get('/shipping');
+// ------------getShipping API END---------------------------------------------------------
+
+// ------------getTotals API START---------------------------------------------------------
+type GetTotalsRequestInterface = {
+  isPromoTrue: boolean;
+  shipping?: 'dhl' | 'fedex' | 'aramex';
+};
+
+type GetTotalsResponseInterface = {
+  status: number;
+  success: boolean;
+  data: {
+    name: string;
+    label: string;
+    currency: string;
+    amount: number;
+  }[];
+};
+
+type GetTotalsType = (data: GetTotalsRequestInterface) => Promise<{ data: GetTotalsResponseInterface }>;
+
+export const getTotals: GetTotalsType = ({ isPromoTrue, shipping = 'dhl' }) => publicAxiosInstance.get(`/totals?coupon=${isPromoTrue}&shipping=${shipping}`);
+// ------------getShipping API END---------------------------------------------------------

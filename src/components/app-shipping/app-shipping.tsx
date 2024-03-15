@@ -1,8 +1,8 @@
 import { RouterHistory } from '@stencil-community/router';
 import { Component, Fragment, Prop, State, h } from '@stencil/core';
-import { Shipping, mockApiService } from '../../services/mock-api-service';
+import { Shipping, getShipping, getTotals } from '../../services/mock-api-service';
 
-export type ShippingMethods = 'DHL' | 'FedEx' | 'ARAMEX';
+export type ShippingMethods = 'dhl' | 'fedex' | 'aramex';
 
 @Component({
   tag: 'app-shipping',
@@ -12,21 +12,44 @@ export type ShippingMethods = 'DHL' | 'FedEx' | 'ARAMEX';
 export class AppShipping {
   @State() isLoading = true;
   @State() shippingItems: Shipping[] = [];
-  @State() selectedShippingMethod: ShippingMethods = 'DHL';
+  @State() selectedShippingMethod: ShippingMethods = 'dhl';
   @Prop() history: RouterHistory;
 
-  statePassed = '';
+  totalCartPrice = 0;
+  shippingFees = 0;
+  isPromoTrue = false;
 
-  async componentDidRender() {
-    const data = (await mockApiService('/shipping')) as Shipping[];
-    this.shippingItems = data;
+  async componentWillLoad() {
+    const response = await getTotals({ isPromoTrue: this.history.location.state.isPromoTrue, shipping: this.selectedShippingMethod });
+    const data = response.data.data;
+    this.totalCartPrice = data.find(total => total.name === 'cart_total')?.amount - data.find(total => total.name === 'discount')?.amount;
+    this.shippingFees = data.find(total => total.name === 'shipping_fees')?.amount;
     this.isLoading = false;
-    this.statePassed = this.history.location.state.totalCartValue;
-
-    if (!Number(this.statePassed)) this.history.push('/');
   }
 
-  changeShippingMethod = (method: ShippingMethods) => {
+  async componentDidRender() {
+    if (this.shippingItems.length === 0) {
+      const response = await getShipping();
+      const data = response.data.data.map(item => ({
+        id: Number(item.id),
+        name: item.label,
+        price: item.fees.amount,
+        pic: item.logo,
+      }));
+      this.shippingItems = data;
+
+      this.isLoading = false;
+      this.isPromoTrue = this.history.location.state.isPromoTrue;
+    }
+  }
+
+  changeShippingMethod = async (method: ShippingMethods) => {
+    this.isLoading = true;
+    const response = await getTotals({ isPromoTrue: this.isPromoTrue, shipping: method });
+    const data = response.data.data;
+    this.totalCartPrice = data.find(total => total.name === 'cart_total')?.amount - data.find(total => total.name === 'discount')?.amount;
+    this.shippingFees = data.find(total => total.name === 'shipping_fees')?.amount;
+    this.isLoading = false;
     this.selectedShippingMethod = method;
   };
 
@@ -35,14 +58,9 @@ export class AppShipping {
       style: 'currency',
       currency: 'SAR',
     });
-    const formattedCartPrice = formatter.format(Number(this.statePassed));
-
-    let shippingFees = 0;
-    if (this.selectedShippingMethod === 'FedEx') shippingFees = 15;
-    if (this.selectedShippingMethod === 'ARAMEX') shippingFees = 25;
-    const formattedShippingPrice = formatter.format(shippingFees);
-
-    const formattedTotals = formatter.format(Number(this.statePassed) + shippingFees);
+    const formattedCartPrice = formatter.format(Number(this.totalCartPrice));
+    const formattedShippingPrice = formatter.format(this.shippingFees);
+    const formattedTotals = formatter.format(Number(this.totalCartPrice) + this.shippingFees);
 
     const navigateWithState = () => {
       this.history.push('/confirmed');
@@ -100,7 +118,11 @@ export class AppShipping {
                   </div>
 
                   {/* Proceed Button */}
-                  <button onClick={() => navigateWithState()} class="bg-basic m-0 text-white text-sm font-normal p-3 rounded-md">
+                  <button
+                    disabled={!this.selectedShippingMethod}
+                    onClick={() => navigateWithState()}
+                    class={`${!this.selectedShippingMethod ? 'bg-gray-400 cursor-not-allowed' : 'bg-basic cursor-pointer'} m-0 text-white text-sm font-normal p-3 rounded-md`}
+                  >
                     Submit
                   </button>
                 </div>

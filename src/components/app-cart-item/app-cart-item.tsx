@@ -28,7 +28,9 @@ export class AppCartItem {
     return (
       <div class="p-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
         <div class="flex gap-2 items-center">
-          <img src={pic} alt="item" />
+          <div class="object-cover h-auto w-10 sm:w-14">
+            <img src={pic} alt="item" />
+          </div>
           <div class="flex flex-col gap-1">
             <p class="font-normal text-xs leading-4 underline w-48">{name}</p>
             <p class="font-normal text-[10px] text-gray-400">{formattedPrice}</p>
